@@ -1,0 +1,142 @@
+#include <iostream>
+#include <vector>
+#include <string>
+using namespace std;
+
+// Struktur data untuk menyimpan informasi produk
+struct Produk {
+    int id;
+    string nama;
+    double harga;
+    int stok;
+};
+
+// Fungsi untuk menambahkan produk ke daftar
+void tambahProduk(vector<Produk>& daftarProduk, int id, string nama, double harga, int stok) {
+    Produk produkBaru = {id, nama, harga, stok};
+    daftarProduk.push_back(produkBaru);
+    cout << "Produk berhasil ditambahkan!\n";
+}
+
+// Fungsi untuk menampilkan semua produk dalam daftar
+void tampilkanProduk(const vector<Produk>& daftarProduk) {
+    if (daftarProduk.empty()) {
+        cout << "Tidak ada produk dalam daftar.\n";
+        return;
+    }
+
+    cout << "\nDaftar Produk:\n";
+    for (const auto& produk : daftarProduk) {
+        cout << "ID: " << produk.id
+             << ", Nama: " << produk.nama
+             << ", Harga: " << produk.harga
+             << ", Stok: " << produk.stok << endl;
+    }
+}
+
+// Fungsi untuk menghapus produk berdasarkan ID
+void hapusProduk(vector<Produk>& daftarProduk, int id) {
+    for (auto it = daftarProduk.begin(); it != daftarProduk.end(); ++it) {
+        if (it->id == id) {
+            daftarProduk.erase(it);
+            cout << "Produk dengan ID " << id << " berhasil dihapus.\n";
+            return;
+        }
+    }
+    cout << "Produk dengan ID " << id << " tidak ditemukan.\n";
+}
+
+// Fungsi untuk mengedit produk berdasarkan ID
+void editProduk(vector<Produk>& daftarProduk, int id) {
+    for (auto& produk : daftarProduk) {
+        if (produk.id == id) {
+            cout << "Masukkan Nama baru: ";
+            cin.ignore();
+            getline(cin, produk.nama);
+            cout << "Masukkan Harga baru: ";
+            cin >> produk.harga;
+            cout << "Masukkan Stok baru: ";
+            cin >> produk.stok;
+            cout << "Produk berhasil diperbarui.\n";
+            return;
+        }
+    }
+    cout << "Produk dengan ID " << id << " tidak ditemukan.\n";
+}
+
+// Fungsi untuk mencari produk berdasarkan nama atau ID
+void cariProduk(const vector<Produk>& daftarProduk, const string& keyword) {
+    bool ditemukan = false;
+    for (const auto& produk : daftarProduk) {
+        if (to_string(produk.id) == keyword || produk.nama.find(keyword) != string::npos) {
+            cout << "ID: " << produk.id
+                 << ", Nama: " << produk.nama
+                 << ", Harga: " << produk.harga
+                 << ", Stok: " << produk.stok << endl;
+            ditemukan = true;
+        }
+    }
+    if (!ditemukan) {
+        cout << "Produk dengan keyword '" << keyword << "' tidak ditemukan.\n";
+    }
+}
+
+// Fungsi utama
+int main() {
+    vector<Produk> daftarProduk;
+    int pilihan;
+
+    do {
+        cout << "\nMenu:\n";
+        cout << "1. Tambah Produk\n";
+        cout << "2. Tampilkan Produk\n";
+        cout << "3. Hapus Produk\n";
+        cout << "4. Edit Produk\n";
+        cout << "5. Cari Produk\n";
+        cout << "6. Keluar\n";
+        cout << "Pilihan Anda: ";
+        cin >> pilihan;
+
+        if (pilihan == 1) {
+            int id, stok;
+            string nama;
+            double harga;
+
+            cout << "Masukkan ID: ";
+            cin >> id;
+            cout << "Masukkan Nama: ";
+            cin.ignore(); // Mengabaikan karakter newline
+            getline(cin, nama);
+            cout << "Masukkan Harga: ";
+            cin >> harga;
+            cout << "Masukkan Stok: ";
+            cin >> stok;
+
+            tambahProduk(daftarProduk, id, nama, harga, stok);
+        } else if (pilihan == 2) {
+            tampilkanProduk(daftarProduk);
+        } else if (pilihan == 3) {
+            int id;
+            cout << "Masukkan ID produk yang ingin dihapus: ";
+            cin >> id;
+            hapusProduk(daftarProduk, id);
+        } else if (pilihan == 4) {
+            int id;
+            cout << "Masukkan ID produk yang ingin diedit: ";
+            cin >> id;
+            editProduk(daftarProduk, id);
+        } else if (pilihan == 5) {
+            string keyword;
+            cout << "Masukkan ID atau Nama produk yang ingin dicari: ";
+            cin.ignore();
+            getline(cin, keyword);
+            cariProduk(daftarProduk, keyword);
+        } else if (pilihan != 6) {
+            cout << "Pilihan tidak valid. Silakan coba lagi.\n";
+        }
+
+    } while (pilihan != 6);
+
+    cout << "Program selesai.\n";
+    return 0;
+}
